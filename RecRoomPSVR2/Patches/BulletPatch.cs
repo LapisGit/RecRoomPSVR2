@@ -18,7 +18,6 @@ namespace RecRoomPSVR2.Patches
             
             if (EDIBICHIJJH == Player.MDMMDPEKICF && EAMJHCGHCIE == Player.GAHEJKDCLLE.Head)
             {
-                Debug.Log("headshot");
                 Plugin.HeadshotHMDFeedback();
             }
         }
