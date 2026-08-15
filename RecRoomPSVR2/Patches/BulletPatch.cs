@@ -11,8 +11,14 @@ namespace RecRoomPSVR2.Patches
         [HarmonyPostfix]
         public static void Postfix(Bullet EDPPMBPBAAC, Player EDIBICHIJJH, Player.GAHEJKDCLLE EAMJHCGHCIE)
         {
+            if (!Plugin.hmdRumble.Value)
+            {
+                return;
+            }
+            
             if (EDIBICHIJJH == Player.MDMMDPEKICF && EAMJHCGHCIE == Player.GAHEJKDCLLE.Head)
             {
+                Debug.Log("headshot");
                 Plugin.HeadshotHMDFeedback();
             }
         }

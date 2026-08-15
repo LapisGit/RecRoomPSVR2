@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
@@ -23,6 +24,9 @@ namespace RecRoomPSVR2
         private static CancellationTokenSource? _hmdRumbleCancellation;
         private static Il2CppSystem.Action<Tool>? _toolPickupCallback;
         private static Il2CppSystem.Action<Tool>? _toolDropCallback;
+        
+        public static ConfigEntry<bool> adaptiveTriggers;
+        public static ConfigEntry<bool> hmdRumble;
         
         // prefab names, usually will have (Clone) at the end, but will be checked in the isToolWeapon check
         private static readonly System.Collections.Generic.HashSet<string> _weaponNames =
@@ -60,12 +64,33 @@ namespace RecRoomPSVR2
             MFBGLIHGCGO<Tool>.BPJDFPACLMK(Tool.StaticLockedToolPickedUpEvent, _toolPickupCallback);
             MFBGLIHGCGO<Tool>.BPJDFPACLMK(Tool.StaticToolPostReleaseEvent, _toolDropCallback);
             
+            hmdRumble = Config.Bind
+            (
+                "Features",
+                "HMD Rumble",
+                true,
+                "If true, when you get headshot by a bullet, the HMD will rumble for a short time. (REQUIRES JAILBREAK TO BE ACTIVE)"
+            );
+            
+            adaptiveTriggers = Config.Bind
+            (
+                "Features",
+                "Adaptive Triggers",
+                true,
+                "If true, adaptive triggers for weapons will be enabled."
+            );
+            
             // init psvr2toolkit, fails if the psvr2toolkit capi api dll isnt next to the normal plugin dll
             PSVR2ToolkitCAPI.Init();
         }
 
         private void OnToolPickup(Tool tool)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             // tool ref here is the player holding the tool, player ref is to get local player
             if (tool.JCGBLBCLAPI == Player.MDMMDPEKICF)
             {
@@ -141,6 +166,11 @@ namespace RecRoomPSVR2
 
         private void OnToolDrop(Tool tool)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             // tool ref here is the player holding the tool, player ref is to get local player
             if (tool.JCGBLBCLAPI == Player.MDMMDPEKICF)
             {
@@ -175,6 +205,11 @@ namespace RecRoomPSVR2
         // weapon trigger effect for a given hand
         public static void SetWeaponTrigger(VRControllerType hand, int strength, int startPosition, int endPosition)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             strength = Math.Clamp(strength, 0, 8);
             startPosition = Math.Clamp(startPosition, 0, 255);
             endPosition = Math.Clamp(endPosition, 0, 255);
@@ -197,6 +232,11 @@ namespace RecRoomPSVR2
         // get rid of all effects for a given hand
         public static void ClearTriggerEffect(VRControllerType hand)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             var command = new ScePadTriggerEffectCommand
             {
                 mode = ScePadTriggerEffectMode.SCE_PAD_TRIGGER_EFFECT_MODE_OFF,
@@ -210,6 +250,11 @@ namespace RecRoomPSVR2
         // vibration trigger effect for a given hand (used for paint thrower/assult rifles)
         public static void SetWeaponVibration(VRControllerType hand, int amplitude, int freq, int pos)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             amplitude = Math.Clamp(amplitude, 0, 8);
             freq = Math.Clamp(freq, 0, 255);
             pos = Math.Clamp(pos, 0, 255);
@@ -231,6 +276,11 @@ namespace RecRoomPSVR2
 
         public static void TickFeedback(Tool tool)
         {
+            if (!adaptiveTriggers.Value)
+            {
+                return;
+            }
+            
             VRControllerType hand;
             
             if (tool.LLMFLFPBJCD.name == "RightHand")
@@ -248,6 +298,11 @@ namespace RecRoomPSVR2
 
         public static async void HeadshotHMDFeedback()
         {
+            if (!hmdRumble.Value)
+            {
+                return;
+            }
+            
             _hmdRumbleCancellation?.Cancel();
             _hmdRumbleCancellation?.Dispose();
 
