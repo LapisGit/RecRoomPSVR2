@@ -5,17 +5,14 @@ using UnityEngine;
 namespace RecRoomPSVR2.Patches
 {
     [HarmonyPatch]
-    public static class BulletPatch
+    public static class PlayerImpactPatch
     {
-        [HarmonyPatch(typeof(Bullet), nameof(Bullet.KNMMJKDHJLM))]
+        [HarmonyPatch(typeof(Bullet.CEFAOBHGLKL), nameof(Bullet.CEFAOBHGLKL.Invoke))]
         [HarmonyPostfix]
-        public static void HitPostfix(Bullet __instance, Player EDIBICHIJJH, Player.GAHEJKDCLLE EAMJHCGHCIE, GHMDIDJLFMC KNLMJBAKCGF)
+        public static void Postfix(Bullet EDPPMBPBAAC, Player EDIBICHIJJH, Player.GAHEJKDCLLE EAMJHCGHCIE)
         {
-            Debug.Log("PLEASWE WOPTRK");
-
             if (EDIBICHIJJH == Player.MDMMDPEKICF && EAMJHCGHCIE == Player.GAHEJKDCLLE.Head)
             {
-                Debug.Log("headshot maybve idpsfp;lk");
                 Plugin.HeadshotHMDFeedback();
             }
         }

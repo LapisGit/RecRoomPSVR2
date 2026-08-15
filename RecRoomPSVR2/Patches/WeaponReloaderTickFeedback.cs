@@ -11,7 +11,10 @@ namespace RecRoomPSVR2.Patches
         [HarmonyPostfix]
         public static void TickPostfix(WeaponReloader __instance)
         {
-            Plugin.TickFeedback(__instance._tool);
+            if (__instance._tool.BHNPNHMILIF == Player.MDMMDPEKICF)
+            {
+                Plugin.TickFeedback(__instance._tool);   
+            }
         }
     }
 }
