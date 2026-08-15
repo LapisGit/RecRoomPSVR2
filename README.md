@@ -1,5 +1,5 @@
 # RecRoomPSVR2
-Adds certain PSVR2 features to Rec Room builds via PSVR2Toolkit.
+Adds certain PSVR2 features to Rec Room builds via [PSVR2Toolkit](https://github.com/BnuuySolutions/PSVR2Toolkit)
 
 Adds:
 - Adaptive Triggers for weapons (All Paintball and Laser Tag weapons are done)
